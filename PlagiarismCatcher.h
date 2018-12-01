@@ -12,6 +12,13 @@ private:
 	int n;
 
 public:
-	PlagiarismCatcher();
+	PlagiarismCatcher(){
+		n = 0;
+	};
+
+	PlagiarismCatcher(int n){
+		this->n = n;
+	};
+
 
 };
