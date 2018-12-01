@@ -37,19 +37,41 @@ public:
 	int generateSequences(string filename);
 };
 
-// string PlagiarismCatcher::getNextWord(string s, int& pos){
-// 	int space = s.find(" ", pos);	
+string PlagiarismCatcher::getNextWord(string s, int& pos){
+	string word;
+	//first look for a space
+	int finder = s.find(" ", pos);
+	bool found = true;
 
-// 	if(pos == space){
-// 		space = s.find("\n", pos);
-// 	}
+	if(finder == string::npos){
+		//then check for a carriage return
+		finder = s.find("\r", pos);
 
-// 	string word = s.substr(pos, space-pos);
+		if(finder == string::npos){
+			//finally look for a newline
+			finder == s.find("\n", pos);
 
-// 	pos = space;
-// cout << space << endl;
-// 	return word;
-// }
+			//if you still didn't find anything, that's a problem
+			if(finder == string::npos){
+				found = false;
+			}
+
+		}
+
+	}
+	//if you found a valid word, return it
+	if(found){
+		word = s.substr(pos, finder-pos);
+		pos = finder+1;
+	}
+	//otherwise, return the empty string and increment your position
+	else{
+		word = "";
+		pos++;
+	}
+
+	return word;
+}
 
 string PlagiarismCatcher::vectorToString(vector<string> vec){
 	string s = "";
@@ -72,48 +94,15 @@ int PlagiarismCatcher::generateSequences(string fileName){
 			string buf;
 			int pos;
 
-
-
 			while(getline(myFile, buf)){
 				
 				pos = 0;
-//cout << buf.size() << endl;
+
 				while(pos < buf.size()){
-					string s;
-					//look for spaces
-					int i = buf.find(" ", pos);
-					//if you found a space, get the word
-					if(i != -1){
-						s = buf.substr(pos, i-pos);
-						//cout << s << " ";
-						pos = i+1;
-					}
-					//otherwise, look for a newline
-					else{
-						i = buf.find('\r', pos);
-						//if you found a newline, get the word
-						if(i != -1){
-							s = buf.substr(pos, i-pos);
-							//cout << s << " ";
-							pos = i+1;
-						}
-						
-						else{
-							i = buf.find('\n', pos);
-							//if you found a newline, get the word
-							if(i != -1){
-								s = buf.substr(pos, i-pos);
-								//cout << s << " ";
-								pos = i+1;
-							}
-
-							else{
-								pos++;
-							}
-						}
-					}
-					vec.push_back(s);
-
+					//push the words into the vector
+					vec.push_back(getNextWord(buf, pos));
+					//when the vector is "full"
+					//get the n word sequence and delete the first word
 					if(vec.size() == n){
 						for(int  j = 0; j < vec.size(); j++){
 							cout << vec[j] << " ";
@@ -126,8 +115,6 @@ int PlagiarismCatcher::generateSequences(string fileName){
 				}
 
 				cout << endl;
-				
-
 			}
 
 		
