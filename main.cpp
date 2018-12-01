@@ -18,6 +18,8 @@
 #include <string>
 #include <iostream>
 
+#include "PlagiarismCatcher.h"
+
 using namespace std;
 
 /*function... might want it in some class?*/
@@ -47,8 +49,12 @@ int main()
     getdir(dir,files, ".txt");
 
     for (unsigned int i = 0; i < files.size();i++) {
-        cout << i << files[i] << endl;
+        //cout << i << files[i] << endl;
     }
+
+    PlagiarismCatcher p;
+    p.generateSequences(files[0]);
+
     return 0;
 }
 
