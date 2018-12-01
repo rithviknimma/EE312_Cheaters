@@ -8,7 +8,7 @@
 using namespace std;
 
 /*function... might want it in some class?*/
-int getdir (string dir, vector<string> &files)
+int getdir (string dir, vector<string> &files, string ext)
 {
     DIR *dp;
     struct dirent *dirp;
@@ -18,7 +18,9 @@ int getdir (string dir, vector<string> &files)
     }
 
     while ((dirp = readdir(dp)) != NULL) {
-        files.push_back(string(dirp->d_name));
+        string fileName = string(dirp->d_name);
+        if(fileName.find(ext) != string::npos)
+            files.push_back(fileName);
     }
     closedir(dp);
     return 0;
@@ -29,9 +31,9 @@ int main()
     string dir = string("sm_doc_set");
     vector<string> files = vector<string>();
 
-    getdir(dir,files);
+    getdir(dir,files, ".txt");
 
-    for (unsigned int i = 0;i < files.size();i++) {
+    for (unsigned int i = 0; i < files.size();i++) {
         cout << i << files[i] << endl;
     }
     return 0;
