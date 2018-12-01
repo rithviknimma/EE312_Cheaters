@@ -56,10 +56,10 @@ int main()
     fileName.append("/");
     fileName.append(files[0]);
 
-    PlagiarismCatcher p;
+    PlagiarismCatcher p(6);
     int e = p.generateSequences(fileName);
     cout << e << endl;
-    
+
     return 0;
 }
 
