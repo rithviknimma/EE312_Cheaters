@@ -1,3 +1,16 @@
+/* main.cpp
+
+  a simple driver for plagiarism
+
+  Name: Rithvik Baddam
+  UT eid: rrb2442
+
+  Name: Arul Saraf
+  UT eid: as75789
+*/
+
+
+
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
