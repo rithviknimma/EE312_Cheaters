@@ -9,8 +9,9 @@
 
 class PlagiarismCatcher{
 private:
+	int n;
 
 public:
 	PlagiarismCatcher();
-	
+
 };
