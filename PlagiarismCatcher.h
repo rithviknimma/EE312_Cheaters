@@ -6,3 +6,11 @@
   Name: Arul Saraf
   UT eid: as75789
 */
+
+class PlagiarismCatcher{
+private:
+
+public:
+	PlagiarismCatcher();
+	
+};
