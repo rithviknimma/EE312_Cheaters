@@ -7,7 +7,6 @@
   UT eid: as75789
 */
 
-#include <queue>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -20,6 +19,7 @@ private:
 	int n;
 
 	string getNextWord(string s, int& pos);
+	string vectorToString(vector<string> vec); 
 
 public:
 	const int SUCCESS = 0;
@@ -37,44 +37,68 @@ public:
 	int generateSequences(string filename);
 };
 
-string PlagiarismCatcher::getNextWord(string s, int& pos){
-	int space = s.find(" ", pos);
-	string word = s.substr(pos, space);
-	pos = space;
+// string PlagiarismCatcher::getNextWord(string s, int& pos){
+// 	int space = s.find(" ", pos);	
 
-	return word;
+// 	if(pos == space){
+// 		space = s.find("\n", pos);
+// 	}
+
+// 	string word = s.substr(pos, space-pos);
+
+// 	pos = space;
+// cout << space << endl;
+// 	return word;
+// }
+
+string PlagiarismCatcher::vectorToString(vector<string> vec){
+	string s = "";
+	for(int  i = 0; i < vec.size(); i++){
+		s.append(vec[i]);
+		s.append(" ");
+	}
+
+	return s;
 }
 
 int PlagiarismCatcher::generateSequences(string fileName){
 
 		ifstream myFile(fileName);
 		
-
 		if(myFile.is_open()){
 
-			queue<string> q;
+			vector<string> vec;
+			vec.push_back("hi");
 			string buf;
 			int pos;
-			int lastPos;
 
-			int space;
-			string word;
+
 
 			while(getline(myFile, buf)){
 				pos = 0;
+cout << buf.size() << endl;
+				while(pos < buf.size()){
+					int i = buf.find(" ", pos);
+					if(i != -1){
+						string s = buf.substr(pos, i-pos);
+						cout << s << " ";
+						pos = i+1;
+					}
 
-				while(q.size() < n){
-					q.push(getNextWord(buf, pos));
+					else{
+						int i = buf.find("\n", pos);
+						string s = buf.substr(pos, i-pos);
+						cout << s << " ";
+						pos = i+1;
+					}
+					
 				}
 
-				q.pop();
-
-
+				cout << endl;
 
 			}
 
-			
-
+		
 			myFile.close();
 			return SUCCESS;
 		}
