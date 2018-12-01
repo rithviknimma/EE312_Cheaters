@@ -19,6 +19,8 @@ class PlagiarismCatcher{
 private:
 	int n;
 
+	string getNextWord(string s, int& pos);
+
 public:
 	const int SUCCESS = 0;
 	const int FILE_TOO_SMALL = 1;
@@ -32,23 +34,46 @@ public:
 		this->n = n;
 	}
 
+	int generateSequences(string filename);
+};
 
-	int generateSequences(string fileName){
+string PlagiarismCatcher::getNextWord(string s, int& pos){
+	int space = s.find(" ", pos);
+	string word = s.substr(pos, space);
+	pos = space;
+
+	return word;
+}
+
+int PlagiarismCatcher::generateSequences(string fileName){
 
 		ifstream myFile(fileName);
-		string buf;
+		
 
 		if(myFile.is_open()){
 
-			while(getline(myFile, buf)){
-				cout << buf << endl;
-			}
-
 			queue<string> q;
+			string buf;
 			int pos;
 			int lastPos;
 
-			pos = 0;
+			int space;
+			string word;
+
+			while(getline(myFile, buf)){
+				pos = 0;
+
+				while(q.size() < n){
+					q.push(getNextWord(buf, pos));
+				}
+
+				q.pop();
+
+
+
+			}
+
+			
 
 			myFile.close();
 			return SUCCESS;
@@ -58,6 +83,3 @@ public:
 			return FILE_NOT_OPENED;
 		}
 	}
-
-
-};

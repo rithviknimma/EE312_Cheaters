@@ -52,9 +52,14 @@ int main()
         //cout << i << files[i] << endl;
     }
 
-    PlagiarismCatcher p;
-    p.generateSequences(files[0]);
+    string fileName = dir;
+    fileName.append("/");
+    fileName.append(files[0]);
 
+    PlagiarismCatcher p;
+    int e = p.generateSequences(fileName);
+    cout << e << endl;
+    
     return 0;
 }
 
