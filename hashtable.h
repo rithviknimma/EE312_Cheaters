@@ -2,13 +2,30 @@ class HashTable{
 private:
 	struct HashNode{
 		string s;
+		string file;
 		HashNode* next;
 	};
 
 	int size;
 	HashNode* table[size];
 
-	void addToList(HashNode* head, string s);
+	void addToList(HashNode* head, string file, string s){
+		HashNode* node = new HashNode;
+		node->next = NULL;
+		node->s = s;
+		node->file = file;
+
+		if(head == NULL){
+			head = node;
+		}
+
+		else{
+			while(head->next != NULL){
+				head = head->next;
+			}
+			head->next = node;
+		}
+	}
 
 public:
 	const int FAILURE = -1;
@@ -30,5 +47,19 @@ public:
 		return size;
 	}
 
-	int addElement(int key, string s);
+	int addElement(int key, string file, string s){
+		if(key >= size){
+			return FAILURE;
+		}
+
+		addToList(table[key], file, s);
+		return SUCCESS;
+	}
+
+	int hash(string s){
+		//some algo
+	}
+
+	~HashTable();
 };
+

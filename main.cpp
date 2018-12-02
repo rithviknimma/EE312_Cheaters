@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 
         for (unsigned int i = 0; i < files.size();i++) {
             fileName = dir;
-            fileName.append("/");
+            //fileName.append("/");
             fileName.append(files[i]);
 
             e = p.generateSequences(fileName);
