@@ -17,7 +17,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-
+#include <cstdlib>
 #include "PlagiarismCatcher.h"
 
 using namespace std;
@@ -41,24 +41,32 @@ int getdir (string dir, vector<string> &files, string ext)
     return 0;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    string dir = string("sm_doc_set");
-    vector<string> files = vector<string>();
+    if(argc < 3){
+        cerr << "Please enter correct cmd line parameters" << endl;
+    }
+    else{
+        //string dir = string("sm_doc_set");
+        string dir = string(argv[1]);
+        PlagiarismCatcher p(stoi(string(argv[2])));
+        vector<string> files = vector<string>();
 
-    getdir(dir,files, ".txt");
+        getdir(dir,files, ".txt");
 
-    for (unsigned int i = 0; i < files.size();i++) {
-        //cout << i << files[i] << endl;
+        for (unsigned int i = 0; i < files.size();i++) {
+            //cout << i << files[i] << endl;
+        }
+
+        string fileName = dir;
+        fileName.append("/");
+        fileName.append(files[0]);
+
+        
+        int e = p.generateSequences(fileName);
+        cout << e << endl; 
     }
 
-    string fileName = dir;
-    fileName.append("/");
-    fileName.append(files[0]);
-
-    PlagiarismCatcher p(6);
-    int e = p.generateSequences(fileName);
-    cout << e << endl;
 
     return 0;
 }
