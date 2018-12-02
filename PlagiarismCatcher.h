@@ -23,6 +23,7 @@ private:
 
 
 public:
+	const int FAILURE = -1;
 	const int SUCCESS = 0;
 	const int FILE_TOO_SMALL = 1;
 	const int FILE_NOT_OPENED = 2;
@@ -100,7 +101,8 @@ int PlagiarismCatcher::generateSequences(string fileName){
 					//when the vector is "full"
 					//get the n word sequence and delete the first word
 					if(vec.size() == n){
-						cout << vectorToString(vec) << endl;
+						string s = vectorToString(vec);
+						cout << s << endl;
 						vec.erase(vec.begin());
 					}	
 				}

@@ -54,17 +54,20 @@ int main(int argc, char* argv[])
 
         getdir(dir,files, ".txt");
 
+        string fileName;
+        int e; 
+
         for (unsigned int i = 0; i < files.size();i++) {
-            //cout << i << files[i] << endl;
+            fileName = dir;
+            fileName.append("/");
+            fileName.append(files[i]);
+
+            e = p.generateSequences(fileName);
+
+            if(e != 0){
+                cout << fileName << " messed up" << endl;
+            }
         }
-
-        string fileName = dir;
-        fileName.append("/");
-        fileName.append(files[0]);
-
-        
-        int e = p.generateSequences(fileName);
-        cout << e << endl; 
     }
 
 
