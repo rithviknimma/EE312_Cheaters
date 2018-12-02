@@ -1,3 +1,7 @@
+#include <vector>
+#include <string>
+using namespace std;
+
 class HashTable{
 private:
 	struct HashNode{
@@ -6,8 +10,8 @@ private:
 		HashNode* next;
 	};
 
-	int size;
-	HashNode* table[size];
+	const static int MAX_SIZE = 10000;
+	HashNode* table[MAX_SIZE];
 
 	void addToList(HashNode* head, string file, string s){
 		HashNode* node = new HashNode;
@@ -32,23 +36,25 @@ public:
 	const int SUCCESS = 0;
 
 	HashTable(){
-		size = 0;
+		// size = 0;
+		// table[size] = new HashNode;
+
 	}
 
 	HashTable(int size){
-		this->size = size;
+		// this->size = size;
 
-		for(int i = 0; i <  size; i++){
-			table[i] = NULL;
-		}
+		// for(int i = 0; i <  size; i++){
+		// 	table[i] = NULL;
+		// }
 	}
 
 	int getSize() const{
-		return size;
+		return MAX_SIZE;
 	}
 
 	int addElement(int key, string file, string s){
-		if(key >= size){
+		if(key >= MAX_SIZE){
 			return FAILURE;
 		}
 
@@ -56,8 +62,9 @@ public:
 		return SUCCESS;
 	}
 
-	int hash(string s){
+	int hash(vector<string> s){
 		//some algo
+		return 0;
 	}
 
 	~HashTable();
