@@ -21,6 +21,7 @@ private:
 	string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
 
+
 public:
 	const int SUCCESS = 0;
 	const int FILE_TOO_SMALL = 1;
