@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     else{
         //string dir = string("sm_doc_set");
         string dir = string(argv[1]);
-        PlagiarismCatcher p(stoi(string(argv[2])));
+        PlagiarismCatcher p(stoi(string(argv[2])), 10000);
         vector<string> files = vector<string>();
 
         getdir(dir,files, ".txt");

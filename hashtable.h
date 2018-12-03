@@ -1,3 +1,9 @@
+#include <vector>
+#include <string>
+using namespace std;
+
+const int MAX_SIZE = 10000;
+
 class HashTable{
 private:
 	struct HashNode{
@@ -6,8 +12,12 @@ private:
 		HashNode* next;
 	};
 
+	
+	// HashNode* table[MAX_SIZE];
+
+
 	int size;
-	HashNode* table[size];
+	HashNode** table;
 
 	void addToList(HashNode* head, string file, string s){
 		HashNode* node = new HashNode;
@@ -32,15 +42,26 @@ public:
 	const int SUCCESS = 0;
 
 	HashTable(){
-		size = 0;
+		size = MAX_SIZE;
+		table = new HashNode*[size];
+		for(int i = 0; i <  size; i++){
+			table[i] = NULL;
+		}	
 	}
 
 	HashTable(int size){
 		this->size = size;
 
+		table = new HashNode*[size];
 		for(int i = 0; i <  size; i++){
 			table[i] = NULL;
 		}
+	}
+
+	HashTable(const HashTable &rhs){
+		// for(){
+			
+		// }
 	}
 
 	int getSize() const{
@@ -56,10 +77,32 @@ public:
 		return SUCCESS;
 	}
 
-	int hash(string s){
+	int hash(vector<string> s){
 		//some algo
+		return 0;
 	}
 
 	~HashTable();
 };
+
+HashTable::~HashTable(){
+	HashNode *ptr;
+	HashNode *trail;
+
+	for(int i = 0; i < MAX_SIZE; i++){
+		if(table[i] != NULL){
+			ptr = table[i];
+			trail = ptr;
+			// delete all nodes until you reach NULL ptr
+			while(ptr != NULL){
+				ptr = trail->next;
+				delete trail;
+				trail = ptr;
+			}
+			delete trail;
+
+			table[i] = NULL;  //head pointer set to null to show that the list is empty
+		}
+	}
+}
 

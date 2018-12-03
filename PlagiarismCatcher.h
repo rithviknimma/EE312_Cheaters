@@ -11,15 +11,18 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
+#include "hashtable.h"
 using namespace std;
 
 class PlagiarismCatcher{
 private:
 	int n;
+	int tableSize;
+	HashTable table;
 
 	string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
+
 
 
 public:
@@ -30,13 +33,17 @@ public:
 
 	PlagiarismCatcher(){
 		n = 0;
+		tableSize = table.getSize();
 	}
 
-	PlagiarismCatcher(int n){
+	PlagiarismCatcher(int n, int tableSize){
 		this->n = n;
+		this->tableSize = tableSize;
+		table = new HashTable(tableSize);
 	}
 
 	int generateSequences(string filename);
+	~PlagiarismCatcher();
 };
 
 string PlagiarismCatcher::getNextWord(string s, int& pos){
@@ -86,34 +93,40 @@ string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 
 int PlagiarismCatcher::generateSequences(string fileName){
 
-		ifstream myFile(fileName);
-		
-		if(myFile.is_open()){
-			vector<string> vec;
-			string buf;
-			int pos;
 
-			while(getline(myFile, buf)){		
-				pos = 0;
-				while(pos < buf.size()){
-					//push the words into the vector
-					vec.push_back(getNextWord(buf, pos));
-					//when the vector is "full"
-					//get the n word sequence and delete the first word
-					if(vec.size() == n){
-						string s = vectorToString(vec);
-						cout << s << endl;
-						vec.erase(vec.begin());
-					}	
-				}
+	ifstream myFile(fileName);
+	if(myFile.is_open()){
+		vector<string> vec;
+		string buf;
+		int pos;
+
+		while(getline(myFile, buf)){		
+			pos = 0;
+			while(pos < buf.size()){
+				//push the words into the vector
+				vec.push_back(getNextWord(buf, pos));
+				//when the vector is "full"
+				//get the n word sequence and delete the first word
+				if(vec.size() == n){
+					string s = vectorToString(vec);
+					cout << s << endl;
+
+					vec.erase(vec.begin());
+				}	
 			}
-
-		
-			myFile.close();
-			return SUCCESS;
 		}
 
-		else{
-			return FILE_NOT_OPENED;
-		}
+	
+		myFile.close();
+		return SUCCESS;
 	}
+
+	else{
+		return FILE_NOT_OPENED;
+	}
+}
+
+PlagiarismCatcher::~PlagiarismCatcher(){
+
+}
+
