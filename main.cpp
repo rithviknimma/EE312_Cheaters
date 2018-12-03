@@ -9,8 +9,6 @@
   UT eid: as75789
 */
 
-
-
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>

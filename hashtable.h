@@ -19,6 +19,8 @@ private:
 	int size;
 	HashNode** table;
 
+	void clearMemory();
+
 	void addToList(HashNode* head, string file, string s){
 		HashNode* node = new HashNode;
 		node->next = NULL;
@@ -58,10 +60,37 @@ public:
 		}
 	}
 
-	HashTable(const HashTable &rhs){
-		// for(){
-			
-		// }
+	HashTable& operator=(const HashTable& rhs){
+		if(&rhs == this){
+			return *this;
+		}
+		clearMemory(); // delete current Hashtable
+
+		size = rhs.size;
+		HashNode *ptr;
+		HashNode *copyPtr;
+		for(int i = 0; i < size; i++){
+			if(rhs.table[i] != NULL){
+				copyPtr = rhs.table[i];
+				ptr = new HashNode;
+				ptr->s = copyPtr->s;
+				ptr->file = copyPtr->file;
+
+				while(copyPtr->next != NULL){
+					ptr->next = new HashNode;
+					(ptr->next)->s = (copyPtr->next)->s;
+					(ptr->next)->file = (copyPtr->next)->file;
+					ptr = ptr->next;
+					copyPtr = copyPtr->next;
+				}
+				ptr->next = copyPtr->next;
+			}
+			else{
+				table[i] = NULL;
+			}			
+		}
+
+		return *this;
 	}
 
 	int getSize() const{
@@ -86,6 +115,10 @@ public:
 };
 
 HashTable::~HashTable(){
+	clearMemory();
+}
+
+void HashTable::clearMemory(){
 	HashNode *ptr;
 	HashNode *trail;
 
