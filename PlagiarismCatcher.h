@@ -18,7 +18,7 @@ class PlagiarismCatcher{
 private:
 	int n;
 	int tableSize;
-	HashTable table;
+	HashTable *table;
 
 	string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
@@ -33,7 +33,7 @@ public:
 
 	PlagiarismCatcher(){
 		n = 0;
-		tableSize = table.getSize();
+		tableSize = table->getSize();
 	}
 
 	PlagiarismCatcher(int n, int tableSize){
