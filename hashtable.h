@@ -8,16 +8,6 @@ const int MAX_SIZE = 10000;
 
 class HashTable{
 private:
-	struct HashNode{
-		string s;
-		string file;
-		HashNode* next;
-	};
-
-	
-	// HashNode* table[MAX_SIZE];
-
-
 	int size;
 	HashNode** table;
 
@@ -44,6 +34,12 @@ private:
 public:
 	const int FAILURE = -1;
 	const int SUCCESS = 0;
+
+	struct HashNode{
+		string s;
+		string file;
+		HashNode* next;
+	};
 
 	HashTable(){
 		size = MAX_SIZE;
