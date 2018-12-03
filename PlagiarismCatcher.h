@@ -140,7 +140,8 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 // 		if(vec[i] != ""){
 // 			for(int j = 0; j < vec.size() - 1; j++){
 // 				for(int k = j+1; k < vec.size(); k++){
-					
+// 					collisions[getFileIndex(vec[i])][getFileIndex(vec[j])]++;
+// 					collisions[getFileIndex(vec[j])][getFileIndex(vec[i])]++;
 // 				}
 // 			}
 // 		}
@@ -161,19 +162,35 @@ void PlagiarismCatcher::findCollisions(int threshold){
 	HashTable::HashNode* inside;
 	for(int i = 0; i < table->getSize(); i++){
 		ptr = hashTable[i];
-		if(ptr != NULL || ptr->next != NULL){
-			while(ptr != NULL){
-				inside = ptr->next;
-				while(inside != NULL){
-					// get index from vector
-					collisions[getFileIndex(ptr->file)][getFileIndex(inside->file)]++;
-					collisions[getFileIndex(inside->file)][getFileIndex(ptr->file)]++;
-					inside = inside->next;
-				}		
-				ptr = ptr->next;		
+		if(ptr != NULL) {
+			if (ptr->next != NULL){
+				while(ptr != NULL){
+					inside = ptr->next;
+					while(inside != NULL){
+						// get index from vector
+						collisions[getFileIndex(ptr->file)][getFileIndex(inside->file)]++;
+						collisions[getFileIndex(inside->file)][getFileIndex(ptr->file)]++;
+						inside = inside->next;
+					}		
+					ptr = ptr->next;		
+				}
 			}
 		}
 	}
+
+
+	for(int i = 1; i < numFiles; i++){
+		for(int j = 0; j < i+1; j++){
+			if(collisions[i][j] > threshold){
+				cout << collisions[i][j] << ": ";
+				cout << files[i] << ", " ;
+				cout << files[j];
+				cout << endl;
+			}
+		}
+	}
+
+
 }
 
 int PlagiarismCatcher::getFileIndex(string s){
