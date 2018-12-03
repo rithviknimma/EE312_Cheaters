@@ -17,6 +17,7 @@ using namespace std;
 class PlagiarismCatcher{
 private:
 	int n;
+	int tableSize;
 	HashTable table;
 
 	string getNextWord(string s, int& pos);
@@ -32,10 +33,13 @@ public:
 
 	PlagiarismCatcher(){
 		n = 0;
+		tableSize = table.getSize();
 	}
 
-	PlagiarismCatcher(int n, int size){
+	PlagiarismCatcher(int n, int tableSize){
 		this->n = n;
+		this->tableSize = tableSize;
+		table = new HashTable(tableSize);
 	}
 
 	int generateSequences(string filename);
