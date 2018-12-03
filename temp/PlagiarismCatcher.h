@@ -33,7 +33,7 @@ public:
 
 	PlagiarismCatcher(){
 		n = 0;
-		tableSize = table->getSize();
+		tableSize = (*table).getSize();
 	}
 
 	PlagiarismCatcher(int n, int tableSize){
@@ -42,7 +42,7 @@ public:
 		table = new HashTable(tableSize);
 	}
 
-	int generateHashtable(string filename);
+	int generateSequences(string filename);
 	~PlagiarismCatcher();
 };
 
@@ -91,9 +91,11 @@ string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	return s;
 }
 
-int PlagiarismCatcher::generateHashtable(string fileName){
-	ifstream myFile(fileName);
+int PlagiarismCatcher::generateSequences(string fileName){
+	vector<int> hashedValues;
+	vector<string> sequences;
 
+	ifstream myFile(fileName);
 	if(myFile.is_open()){
 		vector<string> vec;
 		string buf;
@@ -107,7 +109,22 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 				//when the vector is "full"
 				//get the n word sequence and delete the first word
 				if(vec.size() == n){
-					(*table).addElement((*table).hash(vec), fileName, vectorToString(vec));
+					// string s = vectorToString(vec);
+					// cout << s << endl;
+					sequences.push_back(vectorToString(vec));
+
+					int num = (*table).hash(vec);
+					hashedValues.push_back(num);
+
+					for(int i = 0; i < hashedValues.size()-1; i++){
+						if(hashedValues[i] == num){
+							cout << "Match found between:" << endl;
+							cout << "     " << vectorToString(vec) << endl;
+							cout << "     " << sequences[i] << endl;
+						}
+					}
+
+
 					vec.erase(vec.begin());
 				}	
 			}

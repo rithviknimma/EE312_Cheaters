@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
         PlagiarismCatcher p(stoi(string(argv[2])), 10000);
         vector<string> files = vector<string>();
 
-        getdir(dir,files, ".txt");
+        getdir(dir,files,".txt");
 
         string fileName;
         int e; 
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
             //fileName.append("/");
             fileName.append(files[i]);
 
-            e = p.generateSequences(fileName);
+            e = p.generateHashtable(fileName);
 
             if(e != 0){
                 cout << fileName << " messed up" << endl;
