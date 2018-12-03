@@ -26,6 +26,7 @@ private:
 
 	string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
+	int getFileIndex(string s);
 
 public:
 	const int FAILURE = -1;
@@ -71,9 +72,7 @@ string PlagiarismCatcher::getNextWord(string s, int& pos){
 			if(finder == string::npos){
 				found = false;
 			}
-
 		}
-
 	}
 	//if you found a valid word, return it
 	if(found){
@@ -122,8 +121,6 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 
 			myFile >> buf;
 		}
-
-	
 		myFile.close();
 		return SUCCESS;
 	}
@@ -149,6 +146,43 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 // 		}
 // 	}
 // }
+
+void PlagiarismCatcher::findCollisions(int threshold){
+	int collisions[numFiles][numFiles];
+
+	for(int i = 0; i < numFiles; i++){
+		for(int j = 0; j < numFiles; j++){
+			collisions[i][j] = 0;
+		}
+	}
+
+	HashTable::HashNode** hashTable = table->getTable();
+	HashTable::HashNode* ptr;
+	HashTable::HashNode* inside;
+	for(int i = 0; i < table->getSize(); i++){
+		ptr = hashTable[i];
+		if(ptr != NULL || ptr->next != NULL){
+			while(ptr != NULL){
+				inside = ptr->next;
+				while(inside != NULL){
+					// get index from vector
+					collisions[getFileIndex(ptr->s)][getFileIndex(inside->s)]++;
+					collisions[getFileIndex(inside->s)][getFileIndex(ptr->s)]++;
+					inside = inside->next;
+				}		
+				ptr = ptr->next;		
+			}
+		}
+	}
+}
+
+int PlagiarismCatcher::getFileIndex(string s){
+	int i = 0;
+	while(files[i] != s && i < files.size()){
+		i++;
+	}
+	return i;
+}
 
 PlagiarismCatcher::~PlagiarismCatcher(){
 

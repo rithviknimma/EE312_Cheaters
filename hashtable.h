@@ -171,6 +171,10 @@ public:
 		return table[i];
 	}
 
+	HashNode** getTable(){
+		return table;
+	}
+
 	~HashTable();
 };
 
