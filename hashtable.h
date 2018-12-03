@@ -1,5 +1,7 @@
 #include <vector>
 #include <string>
+#include <cstdlib>
+
 using namespace std;
 
 const int MAX_SIZE = 10000;
@@ -59,9 +61,10 @@ public:
 	}
 
 	HashTable(const HashTable &rhs){
-		// for(){
-			
-		// }
+	}
+
+	HashTable& operator=(const HashTable& rhs){
+
 	}
 
 	int getSize() const{
@@ -78,8 +81,28 @@ public:
 	}
 
 	int hash(vector<string> s){
-		//some algo
-		return 0;
+		const int primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227};
+
+		int numPrimes = 50;
+
+		srand(numPrimes);
+
+		int hashedValue = rand();
+		int wordValue;
+		string word;
+
+		for(int i = 0; i < s.size(); i++){
+			wordValue = 0;
+			word = s[i];
+			for(int j = 0; j < word.size(); j++){
+				wordValue += (primes[rand()%50] * j) - word[j];
+			}
+
+			hashedValue += (primes[rand()%50] * i) + wordValue;
+		}
+
+		return hashedValue % size;
+		
 	}
 
 	~HashTable();
