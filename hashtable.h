@@ -4,29 +4,47 @@
 
 using namespace std;
 
-const int MAX_SIZE = 10000;
+const int MAX_SIZE = 10007;
 
 class HashTable{
+
+public:
+	struct HashNode{
+		string file;
+		HashNode* next;
+	};
+
 private:
 	int size;
 	HashNode** table;
 
 	void clearMemory();
 
-	void addToList(HashNode* head, string file, string s){
-		HashNode* node = new HashNode;
-		node->next = NULL;
-		node->s = s;
-		node->file = file;
-
+	void addToList(HashNode* head, string file){
+		//if the list is empty, just add at head
 		if(head == NULL){
+			HashNode* node = new HashNode;
+			node->next = NULL;
+			node->file = file;
+
 			head = node;
 		}
 
 		else{
+			//keep going until you find a node that points to nothing
 			while(head->next != NULL){
+				//if you find the same file already at a node, don't add anything new
+				if(file.compare(head->file) == 0){
+					return;
+				}
 				head = head->next;
 			}
+
+			//if the file is unique, then add it
+			HashNode* node = new HashNode;
+			node->next = NULL;
+			node->file = file;
+
 			head->next = node;
 		}
 	}
@@ -34,12 +52,6 @@ private:
 public:
 	const int FAILURE = -1;
 	const int SUCCESS = 0;
-
-	struct HashNode{
-		string s;
-		string file;
-		HashNode* next;
-	};
 
 	HashTable(){
 		size = MAX_SIZE;
@@ -71,12 +83,10 @@ public:
 			if(rhs.table[i] != NULL){
 				copyPtr = rhs.table[i];
 				ptr = new HashNode;
-				ptr->s = copyPtr->s;
 				ptr->file = copyPtr->file;
 
 				while(copyPtr->next != NULL){
 					ptr->next = new HashNode;
-					(ptr->next)->s = (copyPtr->next)->s;
 					(ptr->next)->file = (copyPtr->next)->file;
 					ptr = ptr->next;
 					copyPtr = copyPtr->next;
@@ -95,23 +105,17 @@ public:
 		return size;
 	}
 
-	int addElement(int key, string file, string s){
+	int addElement(int key, string file){
 		if(key >= size){
 			return FAILURE;
 		}
 
-		addToList(table[key], file, s);
+		addToList(table[key], file);
 		return SUCCESS;
 	}
 
 	int hash(vector<string> s){
-		const int primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227};
-
-		int numPrimes = 50;
-
-		srand(numPrimes);
-
-		int hashedValue = rand();
+		int hashedValue = 0;
 		int wordValue;
 		string word;
 
@@ -119,14 +123,52 @@ public:
 			wordValue = 0;
 			word = s[i];
 			for(int j = 0; j < word.size(); j++){
-				wordValue += (primes[rand()%50] * j) - word[j];
+				//change upper case to lower case
+				if((word[j] < 91 && word[j] > 64)){
+					word[j] = word[j] + 32;
+				}
+				//only if the letter is lower case or an apostrophe
+				if((word[j] < 123 && word[j] > 96) || word[j] == 39){
+					wordValue += 3^(word.size() - j - 1) * word[j];
+				}
 			}
 
-			hashedValue += (primes[rand()%50] * i) + wordValue;
+			hashedValue += 7^(s.size() - 1 - i) * wordValue;
 		}
 
 		return hashedValue % size;
 		
+	}
+
+	int getNumNodes(int index) const{
+		int numNodes = 0;
+
+		HashNode* ptr = table[index];
+		while(ptr != NULL){
+			numNodes++;
+		}
+
+		return numNodes;
+	}
+
+	vector<string> getCollisionsAt(int index){
+		vector<string> vec;
+
+		if(getNumNodes(index) < 2){
+			vec.push_back("");
+			return vec;
+		}
+		else{
+			HashNode* i = table[index];
+			
+			while(i->next != NULL){
+				vec.push_back(i->file);
+			}
+		}
+	}
+
+	HashNode* operator[](int i){
+		return table[i];
 	}
 
 	~HashTable();

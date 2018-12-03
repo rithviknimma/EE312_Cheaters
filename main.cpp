@@ -41,13 +41,15 @@ int getdir (string dir, vector<string> &files, string ext)
 
 int main(int argc, char* argv[])
 {
-    if(argc < 3){
+    if(argc < 4){
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
         //string dir = string("sm_doc_set");
         string dir = string(argv[1]);
         PlagiarismCatcher p(stoi(string(argv[2])), 10000);
+        int minCollisions = stoi(argv[3]);
+
         vector<string> files = vector<string>();
 
         getdir(dir,files,".txt");
@@ -66,6 +68,10 @@ int main(int argc, char* argv[])
                 cout << fileName << " messed up" << endl;
             }
         }
+
+
+        p.findCollisions(minCollisions);
+
     }
 
 

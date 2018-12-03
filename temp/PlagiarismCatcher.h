@@ -16,14 +16,16 @@ using namespace std;
 
 class PlagiarismCatcher{
 private:
+
 	int n;
 	int tableSize;
 	HashTable *table;
 
+	int numFiles;
+	vector<string> files;
+
 	string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
-
-
 
 public:
 	const int FAILURE = -1;
@@ -32,17 +34,22 @@ public:
 	const int FILE_NOT_OPENED = 2;
 
 	PlagiarismCatcher(){
+		numFiles = 0;
 		n = 0;
-		tableSize = (*table).getSize();
+		tableSize = table->getSize();
 	}
 
 	PlagiarismCatcher(int n, int tableSize){
+		numFiles = 0;
+
 		this->n = n;
 		this->tableSize = tableSize;
 		table = new HashTable(tableSize);
 	}
 
-	int generateSequences(string filename);
+	int generateHashtable(string filename);
+	void findCollisions(int thershold);
+
 	~PlagiarismCatcher();
 };
 
@@ -91,12 +98,14 @@ string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	return s;
 }
 
-int PlagiarismCatcher::generateSequences(string fileName){
-	vector<int> hashedValues;
-	vector<string> sequences;
-
+int PlagiarismCatcher::generateHashtable(string fileName){
 	ifstream myFile(fileName);
+
 	if(myFile.is_open()){
+		files.push_back(fileName);
+		numFiles++;
+
+
 		vector<string> vec;
 		string buf;
 		int pos;
@@ -109,22 +118,7 @@ int PlagiarismCatcher::generateSequences(string fileName){
 				//when the vector is "full"
 				//get the n word sequence and delete the first word
 				if(vec.size() == n){
-					// string s = vectorToString(vec);
-					// cout << s << endl;
-					sequences.push_back(vectorToString(vec));
-
-					int num = (*table).hash(vec);
-					hashedValues.push_back(num);
-
-					for(int i = 0; i < hashedValues.size()-1; i++){
-						if(hashedValues[i] == num){
-							cout << "Match found between:" << endl;
-							cout << "     " << vectorToString(vec) << endl;
-							cout << "     " << sequences[i] << endl;
-						}
-					}
-
-
+					(*table).addElement((*table).hash(vec), fileName, vectorToString(vec));
 					vec.erase(vec.begin());
 				}	
 			}
@@ -138,6 +132,15 @@ int PlagiarismCatcher::generateSequences(string fileName){
 	else{
 		return FILE_NOT_OPENED;
 	}
+}
+
+void PlagiarismCatcher::findCollisions(int t){
+	int collisions[numFiles][numFiles];
+
+	HashTable::HashNode* p = (*table)[1];
+
+
+
 }
 
 PlagiarismCatcher::~PlagiarismCatcher(){
