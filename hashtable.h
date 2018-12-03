@@ -7,6 +7,13 @@ using namespace std;
 const int MAX_SIZE = 10000;
 
 class HashTable{
+public:
+	struct HashNode{
+		string s;
+		string file;
+		HashNode* next;
+	};
+
 private:
 	int size;
 	HashNode** table;
@@ -34,12 +41,6 @@ private:
 public:
 	const int FAILURE = -1;
 	const int SUCCESS = 0;
-
-	struct HashNode{
-		string s;
-		string file;
-		HashNode* next;
-	};
 
 	HashTable(){
 		size = MAX_SIZE;
@@ -127,6 +128,10 @@ public:
 
 		return hashedValue % size;
 		
+	}
+
+	HashNode** getTable(){
+		return table;
 	}
 
 	~HashTable();
