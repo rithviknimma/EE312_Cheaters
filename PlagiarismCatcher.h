@@ -166,8 +166,8 @@ void PlagiarismCatcher::findCollisions(int threshold){
 				inside = ptr->next;
 				while(inside != NULL){
 					// get index from vector
-					collisions[getFileIndex(ptr->s)][getFileIndex(inside->s)]++;
-					collisions[getFileIndex(inside->s)][getFileIndex(ptr->s)]++;
+					collisions[getFileIndex(ptr->file)][getFileIndex(inside->file)]++;
+					collisions[getFileIndex(inside->file)][getFileIndex(ptr->file)]++;
 					inside = inside->next;
 				}		
 				ptr = ptr->next;		
