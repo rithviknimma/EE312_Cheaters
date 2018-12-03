@@ -24,7 +24,7 @@ private:
 	int numFiles;
 	vector<string> files;
 
-	string getNextWord(string s, int& pos);
+	// string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
 	int getFileIndex(string s);
 
@@ -54,39 +54,39 @@ public:
 	~PlagiarismCatcher();
 };
 
-string PlagiarismCatcher::getNextWord(string s, int& pos){
-	string word;
-	//first look for a space
-	int finder = s.find(" ", pos);
-	bool found = true;
+// string PlagiarismCatcher::getNextWord(string s, int& pos){
+// 	string word;
+// 	//first look for a space
+// 	int finder = s.find(" ", pos);
+// 	bool found = true;
 
-	if(finder == string::npos){
-		//then check for a carriage return
-		finder = s.find("\r", pos);
+// 	if(finder == string::npos){
+// 		//then check for a carriage return
+// 		finder = s.find("\r", pos);
 
-		if(finder == string::npos){
-			//finally look for a newline
-			finder = s.find("\n", pos);
+// 		if(finder == string::npos){
+// 			//finally look for a newline
+// 			finder = s.find("\n", pos);
 
-			//if you still didn't find anything, that's a problem
-			if(finder == string::npos){
-				found = false;
-			}
-		}
-	}
-	//if you found a valid word, return it
-	if(found){
-		word = s.substr(pos, finder-pos);
-		pos = finder+1;
-	}
-	//otherwise, return the empty string and increment your position
-	else{
-		word = "";
-		pos++;
-	}
+// 			//if you still didn't find anything, that's a problem
+// 			if(finder == string::npos){
+// 				found = false;
+// 			}
+// 		}
+// 	}
+// 	//if you found a valid word, return it
+// 	if(found){
+// 		word = s.substr(pos, finder-pos);
+// 		pos = finder+1;
+// 	}
+// 	//otherwise, return the empty string and increment your position
+// 	else{
+// 		word = "";
+// 		pos++;
+// 	}
 
-	return word;
-}
+// 	return word;
+// }
 
 string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	string s = "";
@@ -116,12 +116,14 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 			//get the n word sequence and delete the first word
 			if(vec.size() == n){
 				(*table).addElement((*table).hash(vec), fileName);
+//cout<< vectorToString(vec)<< endl;  word sequences are being added to the vector as a queue
 				vec.erase(vec.begin());
 			}	
 
 			myFile >> buf;
 		}
 		myFile.close();
+// cout << vectorToString(files) <<endl; files are being stored properly 
 		return SUCCESS;
 	}
 
@@ -150,7 +152,6 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 
 void PlagiarismCatcher::findCollisions(int threshold){
 	int collisions[numFiles][numFiles];
-
 	for(int i = 0; i < numFiles; i++){
 		for(int j = 0; j < numFiles; j++){
 			collisions[i][j] = 0;
@@ -160,6 +161,15 @@ void PlagiarismCatcher::findCollisions(int threshold){
 	HashTable::HashNode** hashTable = table->getTable();
 	HashTable::HashNode* ptr;
 	HashTable::HashNode* inside;
+
+	// for(int i = 0; i < table->getSize(); i++){
+	// 	ptr = hashTable[i];
+	// 	if(ptr != NULL){
+	// 		cout << "works" << endl;
+	// 	}
+	// }
+
+	
 	for(int i = 0; i < table->getSize(); i++){
 		ptr = hashTable[i];
 		if(ptr != NULL) {
@@ -189,13 +199,11 @@ void PlagiarismCatcher::findCollisions(int threshold){
 			}
 		}
 	}
-
-
 }
 
 int PlagiarismCatcher::getFileIndex(string s){
 	int i = 0;
-	while(files[i] != s && i < files.size()){
+	while(files[i].compare(s) && i < files.size()){
 		i++;
 	}
 	return i;

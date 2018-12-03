@@ -59,7 +59,6 @@ int main(int argc, char* argv[])
 
         for (unsigned int i = 0; i < files.size();i++) {
             fileName = dir;
-            //fileName.append("/");
             fileName.append(files[i]);
 
             e = p.generateHashtable(fileName);
@@ -73,8 +72,6 @@ int main(int argc, char* argv[])
         p.findCollisions(minCollisions);
 
     }
-
-
     return 0;
 }
 

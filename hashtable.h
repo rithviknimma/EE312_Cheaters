@@ -20,17 +20,46 @@ private:
 
 	void clearMemory();
 
-	void addToList(HashNode* head, string file){
+	// void addToList(HashNode* head, string file){
+	// 	//if the list is empty, just add at head
+	// 	if(head == NULL){
+	// 		HashNode* node = new HashNode;
+	// 		node->next = NULL;
+	// 		node->file = file;
+
+	// 		head = node;
+	// 	}
+
+	// 	else{
+	// 		//keep going until you find a node that points to nothing
+	// 		while(head->next != NULL){
+	// 			//if you find the same file already at a node, don't add anything new
+	// 			if(file.compare(head->file) == 0){
+	// 				return;
+	// 			}
+	// 			head = head->next;
+	// 		}
+
+	// 		//if the file is unique, then add it
+	// 		HashNode* node = new HashNode;
+	// 		node->next = NULL;
+	// 		node->file = file;
+
+	// 		head->next = node;
+	// 	}
+	// }
+	void addToList(int key, string file){
 		//if the list is empty, just add at head
-		if(head == NULL){
+		if(table[key] == NULL){
 			HashNode* node = new HashNode;
 			node->next = NULL;
 			node->file = file;
 
-			head = node;
+			table[key] = node;
 		}
 
 		else{
+			HashNode* head = table[key];
 			//keep going until you find a node that points to nothing
 			while(head->next != NULL){
 				//if you find the same file already at a node, don't add anything new
@@ -48,7 +77,6 @@ private:
 			head->next = node;
 		}
 	}
-
 public:
 	const int FAILURE = -1;
 	const int SUCCESS = 0;
@@ -106,11 +134,17 @@ public:
 	}
 
 	int addElement(int key, string file){
-		if(key >= size){
+		// key cannot be out of bounds of the hash table
+		if(key >= size || key < 0){
 			return FAILURE;
 		}
 
-		addToList(table[key], file);
+		//addToList(table[key], file);
+		addToList(key, file);
+// 		if(table[key] != NULL){
+// cout << (table[key])->file << endl;
+// 		}
+		
 		return SUCCESS;
 	}
 
@@ -165,6 +199,7 @@ public:
 				vec.push_back(i->file);
 			}
 		}
+		return vec;
 	}
 
 	HashNode* operator[](int i){
@@ -185,7 +220,7 @@ HashTable::~HashTable(){
 void HashTable::clearMemory(){
 	HashNode *ptr;
 	HashNode *trail;
-
+	cout<< "clears Memory";
 	for(int i = 0; i < MAX_SIZE; i++){
 		if(table[i] != NULL){
 			ptr = table[i];
