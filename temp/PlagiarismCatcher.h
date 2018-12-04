@@ -19,13 +19,14 @@ private:
 
 	int n;
 	int tableSize;
-	HashTable *table;
+	HashTable table;
 
 	int numFiles;
 	vector<string> files;
 
 	string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
+	int getFileIndex(string s);
 
 public:
 	const int FAILURE = -1;
@@ -36,7 +37,14 @@ public:
 	PlagiarismCatcher(){
 		numFiles = 0;
 		n = 0;
-		tableSize = table->getSize();
+		tableSize = table.getSize();
+	}
+
+	PlagiarismCatcher(int n){
+		numFiles = 0;
+		this->n = n;
+		tableSize = table.getSize();
+		cout << tableSize << endl;
 	}
 
 	PlagiarismCatcher(int n, int tableSize){
@@ -44,7 +52,7 @@ public:
 
 		this->n = n;
 		this->tableSize = tableSize;
-		table = new HashTable(tableSize);
+		table = *(new HashTable(tableSize));
 	}
 
 	int generateHashtable(string filename);
@@ -71,9 +79,7 @@ string PlagiarismCatcher::getNextWord(string s, int& pos){
 			if(finder == string::npos){
 				found = false;
 			}
-
 		}
-
 	}
 	//if you found a valid word, return it
 	if(found){
@@ -95,6 +101,7 @@ string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 		s.append(vec[i]);
 		s.append(" ");
 	}
+
 	return s;
 }
 
@@ -105,26 +112,23 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 		files.push_back(fileName);
 		numFiles++;
 
-
 		vector<string> vec;
 		string buf;
-		int pos;
 
-		while(getline(myFile, buf)){		
-			pos = 0;
-			while(pos < buf.size()){
-				//push the words into the vector
-				vec.push_back(getNextWord(buf, pos));
-				//when the vector is "full"
-				//get the n word sequence and delete the first word
-				if(vec.size() == n){
-					(*table).addElement((*table).hash(vec), fileName, vectorToString(vec));
-					vec.erase(vec.begin());
-				}	
-			}
+		myFile >> buf;
+
+		while(myFile){		
+			//push the words into the vector
+			vec.push_back(buf);	
+			//when the vector is "full"
+			//get the n word sequence and delete the first word
+			if(vec.size() == n){
+				table.addElement(table.hash(vec), fileName);
+				vec.erase(vec.begin());
+			}	
+
+			myFile >> buf;
 		}
-
-	
 		myFile.close();
 		return SUCCESS;
 	}
@@ -134,16 +138,96 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 	}
 }
 
-void PlagiarismCatcher::findCollisions(int t){
+void PlagiarismCatcher::findCollisions(int threshold){
+	int collisions[numFiles][numFiles];
+	for(int i = 0; i < numFiles; i++){
+		for(int j = 0; j < numFiles; j++){
+			collisions[i][j] = 0;
+		}
+	}
+
+	vector<string> vec;
+
+	for(int i = 0; i < table.getSize(); i++){
+		vec = table.getCollisionsAt(i);
+
+		if(vec[0] != ""){
+			for(int j = 0; j < vec.size() - 1; j++){
+				for(int k = j+1; k < vec.size(); k++){
+					collisions[getFileIndex(vec[i])][getFileIndex(vec[j])]++;
+					collisions[getFileIndex(vec[j])][getFileIndex(vec[i])]++;
+				}
+			}
+		}
+	}
+
+	for(int i = 1; i < numFiles; i++){
+		for(int j = 0; j < i+1; j++){
+			if(collisions[i][j] > threshold){
+				cout << collisions[i][j] << ": ";
+				cout << files[i] << ", " ;
+				cout << files[j];
+				cout << endl;
+			}
+		}
+	}
+}
+
+/*
+void PlagiarismCatcher::findCollisions(int threshold){
 	int collisions[numFiles][numFiles];
 
-	HashTable::HashNode* p = (*table)[1];
+	for(int i = 0; i < numFiles; i++){
+		for(int j = 0; j < numFiles; j++){
+			collisions[i][j] = 0;
+		}
+	}
 
+	HashTable::HashNode** hashTable = table->getTable();
+	HashTable::HashNode* ptr;
+	HashTable::HashNode* inside;
+	for(int i = 0; i < table->getSize(); i++){
+		ptr = hashTable[i];
+		if(ptr != NULL) {
+			if (ptr->next != NULL){
+				while(ptr != NULL){
+					inside = ptr->next;
+					while(inside != NULL){
+						// get index from vector
+						collisions[getFileIndex(ptr->file)][getFileIndex(inside->file)]++;
+						collisions[getFileIndex(inside->file)][getFileIndex(ptr->file)]++;
+						inside = inside->next;
+					}		
+					ptr = ptr->next;		
+				}
+			}
+		}
+	}
+
+
+	for(int i = 1; i < numFiles; i++){
+		for(int j = 0; j < numFiles; j++){
+			if(collisions[i][j] > threshold){
+				cout << collisions[i][j] << ": ";
+				cout << files[i] << ", " ;
+				cout << files[j];
+				cout << endl;
+			}
+		}
+	}
 
 
 }
+*/
+int PlagiarismCatcher::getFileIndex(string s){
+	int i = 0;
+	while(files[i].compare(s) != 0){
+		i++;
+	}
+	return i;
+}
 
 PlagiarismCatcher::~PlagiarismCatcher(){
-
+	//delete table;
 }
 

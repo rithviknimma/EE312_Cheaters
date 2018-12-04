@@ -45,7 +45,6 @@ int main(int argc, char* argv[])
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
-        //string dir = string("sm_doc_set");
         string dir = string(argv[1]);
         PlagiarismCatcher p(stoi(string(argv[2])));
         int minCollisions = stoi(argv[3]);
@@ -55,23 +54,25 @@ int main(int argc, char* argv[])
         getdir(dir,files,".txt");
 
         string fileName;
-        int e; 
+        int error; 
 
         for (unsigned int i = 0; i < files.size();i++) {
             fileName = dir;
+            //fileName.append("/");
             fileName.append(files[i]);
 
-            e = p.generateHashtable(fileName);
+            error = p.generateHashtable(fileName);
 
-            if(e != 0){
+            if(error != 0){
                 cout << fileName << " messed up" << endl;
             }
         }
 
-
         p.findCollisions(minCollisions);
 
     }
+
+
     return 0;
 }
 

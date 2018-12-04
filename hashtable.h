@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const int MAX_SIZE = 10007;
+const int MAX_SIZE = 100007;
 
 class HashTable{
 
@@ -148,8 +148,8 @@ public:
 		return SUCCESS;
 	}
 
-	int hash(vector<string> s){
-		int hashedValue = 0;
+	int hash(vector<string>& s){
+		int hashedValue = 1;
 		int wordValue;
 		string word;
 
@@ -161,17 +161,23 @@ public:
 				if((word[j] < 91 && word[j] > 64)){
 					word[j] = word[j] + 32;
 				}
-				//only if the letter is lower case or an apostrophe
-				if((word[j] < 123 && word[j] > 96) || word[j] == 39){
-					wordValue += 3^(word.size() - j - 1) * word[j];
+				//only if the letter is not lower case o
+				else if(!(word[j] < 123 && word[j] > 96) && !(word[j] < 58 && word[j] > 47) && !(word[j] == 39)){
+					word.erase(word.begin() + j);
 				}
 			}
 
-			hashedValue += 7^(s.size() - 1 - i) * wordValue;
+			for(int j = 0; j < word.size(); j++){
+				wordValue += 7^(word.size() - 1 - j) * word[j];
+			}
+
+
+			hashedValue += (2^word[0] * wordValue);
 		}
 
-		return hashedValue % size;
-		
+		hashedValue = hashedValue % size;
+
+		return hashedValue;
 	}
 
 	int getNumNodes(int index) const{
@@ -220,7 +226,7 @@ HashTable::~HashTable(){
 void HashTable::clearMemory(){
 	HashNode *ptr;
 	HashNode *trail;
-	cout<< "clears Memory";
+	//cout << "clears Memory";
 	for(int i = 0; i < MAX_SIZE; i++){
 		if(table[i] != NULL){
 			ptr = table[i];

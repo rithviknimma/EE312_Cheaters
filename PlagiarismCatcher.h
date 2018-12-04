@@ -19,7 +19,7 @@ private:
 
 	int n;
 	int tableSize;
-	HashTable *table;
+	HashTable table;
 
 	int numFiles;
 	vector<string> files;
@@ -37,7 +37,14 @@ public:
 	PlagiarismCatcher(){
 		numFiles = 0;
 		n = 0;
-		tableSize = table->getSize();
+		tableSize = table.getSize();
+	}
+
+	PlagiarismCatcher(int n){
+		numFiles = 0;
+
+		this->n = n;
+		this->tableSize = table.getSize();
 	}
 
 	PlagiarismCatcher(int n, int tableSize){
@@ -45,7 +52,7 @@ public:
 
 		this->n = n;
 		this->tableSize = tableSize;
-		table = new HashTable(tableSize);
+		table = *(new HashTable(tableSize));
 	}
 
 	int generateHashtable(string filename);
@@ -115,7 +122,7 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 			//when the vector is "full"
 			//get the n word sequence and delete the first word
 			if(vec.size() == n){
-				(*table).addElement((*table).hash(vec), fileName);
+				table.addElement(table.hash(vec), fileName);
 //cout<< vectorToString(vec)<< endl;  word sequences are being added to the vector as a queue
 				vec.erase(vec.begin());
 			}	
@@ -158,7 +165,7 @@ void PlagiarismCatcher::findCollisions(int threshold){
 		}
 	}
 
-	HashTable::HashNode** hashTable = table->getTable();
+	HashTable::HashNode** hashTable = table.getTable();
 	HashTable::HashNode* ptr;
 	HashTable::HashNode* inside;
 
@@ -170,7 +177,7 @@ void PlagiarismCatcher::findCollisions(int threshold){
 	// }
 
 	
-	for(int i = 0; i < table->getSize(); i++){
+	for(int i = 0; i < table.getSize(); i++){
 		ptr = hashTable[i];
 		if(ptr != NULL) {
 			if (ptr->next != NULL){
@@ -190,7 +197,7 @@ void PlagiarismCatcher::findCollisions(int threshold){
 
 
 	for(int i = 1; i < numFiles; i++){
-		for(int j = 0; j < i+1; j++){
+		for(int j = 0; j < i; j++){
 			if(collisions[i][j] > threshold){
 				cout << collisions[i][j] << ": ";
 				cout << files[i] << ", " ;
