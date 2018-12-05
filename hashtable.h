@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <cmath>\
 
 using namespace std;
 
@@ -148,31 +149,58 @@ public:
 		return SUCCESS;
 	}
 
-	int hash(vector<string>& s){
-		int hashedValue = 1;
-		int wordValue;
-		string word;
+	// int hash(vector<string>& s){
+	// 	int hashedValue = 1;
+	// 	int wordValue;
+	// 	string word;
 
-		for(int i = 0; i < s.size(); i++){
-			wordValue = 0;
-			word = s[i];
-			for(int j = 0; j < word.size(); j++){
-				//change upper case to lower case
-				if((word[j] < 91 && word[j] > 64)){
-					word[j] = word[j] + 32;
-				}
-				//only if the letter is not lower case o
-				else if(!(word[j] < 123 && word[j] > 96) && !(word[j] < 58 && word[j] > 47) && !(word[j] == 39)){
-					word.erase(word.begin() + j);
-				}
+	// 	for(int i = 0; i < s.size(); i++){
+	// 		wordValue = 0;
+	// 		word = s[i];
+	// 		for(int j = 0; j < word.size(); j++){
+	// 			//change upper case to lower case
+	// 			if((word[j] < 91 && word[j] > 64)){
+	// 				word[j] = word[j] + 32;
+	// 			}
+	// 			//only if the letter is not lower case o
+	// 			else if(!(word[j] < 123 && word[j] > 96) && !(word[j] < 58 && word[j] > 47) && !(word[j] == 39)){
+	// 				word.erase(word.begin() + j);
+	// 			}
+	// 		}
+
+	// 		for(int j = 0; j < word.size(); j++){
+	// 			wordValue += 7^(word.size() - 1 - j) * word[j];
+	// 		}
+
+
+	// 		hashedValue += (2^word[0] * wordValue);
+	// 	}
+
+	// 	hashedValue = hashedValue % size;
+
+	// 	return hashedValue;
+	// }
+
+	int hash(string s){
+		int hashedValue = 37;
+		int wordValue = 0;
+
+		for(int i = 0; i < s.length(); i++){
+			if(s[i] == ' '){
+				wordValue = 0;
 			}
 
-			for(int j = 0; j < word.size(); j++){
-				wordValue += 7^(word.size() - 1 - j) * word[j];
+			if((s[i] < 91 && s[i] > 64)){
+				s[i] = s[i] + 32;
 			}
+			//only if the letter is not lower case o
+			// else if(!(word[j] < 123 && word[j] > 96) && !(word[j] < 58 && word[j] > 47) && !(word[j] == 39)){
+			// 	word.erase(word.begin() + j);
+			// }
 
+			wordValue += 7^i * s[i];
 
-			hashedValue += (2^word[0] * wordValue);
+			hashedValue += wordValue;
 		}
 
 		hashedValue = hashedValue % size;

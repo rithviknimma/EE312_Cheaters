@@ -122,7 +122,7 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 			//when the vector is "full"
 			//get the n word sequence and delete the first word
 			if(vec.size() == n){
-				table.addElement(table.hash(vec), fileName);
+				table.addElement(table.hash(vectorToString(vec)), fileName);
 //cout<< vectorToString(vec)<< endl;  word sequences are being added to the vector as a queue
 				vec.erase(vec.begin());
 			}	
