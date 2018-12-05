@@ -11,6 +11,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "hashtable.h"
 using namespace std;
 
@@ -118,12 +119,17 @@ vector<string> PlagiarismCatcher::findCollisions(int threshold){
 			}
 		}
 	}
+
 	string s;
 	for(int i = 1; i < files.size(); i++){
 		for(int j = 0; j < i; j++){
 			if(collisions[i][j] > threshold){
 				s = "";
-				s.append(to_string(collisions[i][j]));
+				
+				ostringstream toInt;
+				toInt << collisions[i][j];
+				s.append(toInt.str());
+
 				s.append(": ");
 				s.append(files[i]);
 				s.append(", ");
