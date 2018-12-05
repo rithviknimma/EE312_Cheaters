@@ -16,13 +16,11 @@ using namespace std;
 
 class PlagiarismCatcher{
 private:
-
 	int n;
 
 	HashTable table;
 	vector<string> files;
 
-	// string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
 	int getFileIndex(string s);
 
@@ -57,6 +55,7 @@ void PlagiarismCatcher::setFiles(vector<string>& dir){
 	files = dir;
 }
 
+// function that converts vector<string> to String and returns it
 string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	string s = "";
 	for(int  i = 0; i < vec.size(); i++){
@@ -105,7 +104,6 @@ vector<string> PlagiarismCatcher::findCollisions(int threshold){
 			collisions[i][j] = 0;
 		}
 	}
-
 	vector<int> vec;
 
 	for(int i = 0; i < table.getSize(); i++){
@@ -135,7 +133,6 @@ vector<string> PlagiarismCatcher::findCollisions(int threshold){
 			}
 		}
 	}
-
 	return colls;
 }
 

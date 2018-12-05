@@ -78,6 +78,7 @@ private:
 			head->next = node;
 		}
 	}
+
 public:
 
 	HashTable(){
@@ -121,6 +122,7 @@ public:
 				ptr->next = copyPtr->next;
 			}
 			else{
+				// copy null 
 				table[i] = NULL;
 			}			
 		}

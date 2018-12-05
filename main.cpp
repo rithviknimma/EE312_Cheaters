@@ -20,7 +20,7 @@
 
 using namespace std;
 
-/*function... might want it in some class?*/
+// function to get txt file names
 int getdir (string dir, vector<string> &files, string ext)
 {
     DIR *dp;
@@ -39,9 +39,10 @@ int getdir (string dir, vector<string> &files, string ext)
     return 0;
 }
 
+// main engine, runs the hashing function
 int main(int argc, char* argv[])
 {
-    if(argc < 4){
+    if(argc < 4){ // needs at least 4 parameters
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
@@ -59,10 +60,10 @@ int main(int argc, char* argv[])
         string fileName;
         int e; 
 
-        for (unsigned int i = 0; i < files.size();i++) {
+        // generate hash table for all txt files
+        for (unsigned int i = 0; i < files.size();i++) { 
             fileName = dir;
             fileName.append(files[i]);
-
             files[i] = fileName;
         }
 
@@ -80,7 +81,6 @@ int main(int argc, char* argv[])
         }
 
         cout << "File reading, hashing, and collision finding took " << duration << " seconds." << endl;
-
     }
     return 0;
 }
