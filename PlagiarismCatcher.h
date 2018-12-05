@@ -16,7 +16,6 @@ using namespace std;
 
 class PlagiarismCatcher{
 private:
-
 	int n;
 	int tableSize;
 	HashTable table;
@@ -24,7 +23,6 @@ private:
 	int numFiles;
 	vector<string> files;
 
-	// string getNextWord(string s, int& pos);
 	string vectorToString(const vector<string>& vec); 
 	int getFileIndex(string s);
 
@@ -61,40 +59,7 @@ public:
 	~PlagiarismCatcher();
 };
 
-// string PlagiarismCatcher::getNextWord(string s, int& pos){
-// 	string word;
-// 	//first look for a space
-// 	int finder = s.find(" ", pos);
-// 	bool found = true;
-
-// 	if(finder == string::npos){
-// 		//then check for a carriage return
-// 		finder = s.find("\r", pos);
-
-// 		if(finder == string::npos){
-// 			//finally look for a newline
-// 			finder = s.find("\n", pos);
-
-// 			//if you still didn't find anything, that's a problem
-// 			if(finder == string::npos){
-// 				found = false;
-// 			}
-// 		}
-// 	}
-// 	//if you found a valid word, return it
-// 	if(found){
-// 		word = s.substr(pos, finder-pos);
-// 		pos = finder+1;
-// 	}
-// 	//otherwise, return the empty string and increment your position
-// 	else{
-// 		word = "";
-// 		pos++;
-// 	}
-
-// 	return word;
-// }
-
+// function that converts vector<string> to String and returns it
 string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	string s = "";
 	for(int  i = 0; i < vec.size(); i++){
@@ -104,6 +69,7 @@ string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	return s;
 }
 
+// generates hashtable
 int PlagiarismCatcher::generateHashtable(string fileName){
 	ifstream myFile(fileName);
 
@@ -123,14 +89,12 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 			//get the n word sequence and delete the first word
 			if(vec.size() == n){
 				table.addElement(table.hash(vectorToString(vec)), fileName);
-//cout<< vectorToString(vec)<< endl;  word sequences are being added to the vector as a queue
 				vec.erase(vec.begin());
 			}	
 
 			myFile >> buf;
 		}
 		myFile.close();
-// cout << vectorToString(files) <<endl; files are being stored properly 
 		return SUCCESS;
 	}
 
@@ -138,24 +102,6 @@ int PlagiarismCatcher::generateHashtable(string fileName){
 		return FILE_NOT_OPENED;
 	}
 }
-
-// void PlagiarismCatcher::findCollisions(int threshold){
-// 	int collisions[numFiles][numFiles];
-// 	vector<string> vec;
-
-// 	for(int i = 0; i < table->getSize(); i++){
-// 		vec = table->getCollisionsAt(i);
-
-// 		if(vec[i] != ""){
-// 			for(int j = 0; j < vec.size() - 1; j++){
-// 				for(int k = j+1; k < vec.size(); k++){
-// 					collisions[getFileIndex(vec[i])][getFileIndex(vec[j])]++;
-// 					collisions[getFileIndex(vec[j])][getFileIndex(vec[i])]++;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
 
 void PlagiarismCatcher::findCollisions(int threshold){
 	int collisions[numFiles][numFiles];
@@ -168,23 +114,15 @@ void PlagiarismCatcher::findCollisions(int threshold){
 	HashTable::HashNode** hashTable = table.getTable();
 	HashTable::HashNode* ptr;
 	HashTable::HashNode* inside;
-
-	// for(int i = 0; i < table->getSize(); i++){
-	// 	ptr = hashTable[i];
-	// 	if(ptr != NULL){
-	// 		cout << "works" << endl;
-	// 	}
-	// }
-
 	
 	for(int i = 0; i < table.getSize(); i++){
 		ptr = hashTable[i];
 		if(ptr != NULL) {
-			if (ptr->next != NULL){
+			if (ptr->next != NULL){  // do not record collision if less than two nodes are available
 				while(ptr != NULL){
 					inside = ptr->next;
 					while(inside != NULL){
-						// get index from vector
+						// get index from vector and record collisions
 						collisions[getFileIndex(ptr->file)][getFileIndex(inside->file)]++;
 						collisions[getFileIndex(inside->file)][getFileIndex(ptr->file)]++;
 						inside = inside->next;
@@ -195,7 +133,7 @@ void PlagiarismCatcher::findCollisions(int threshold){
 		}
 	}
 
-
+	// output all the collisions
 	for(int i = 1; i < numFiles; i++){
 		for(int j = 0; j < i; j++){
 			if(collisions[i][j] > threshold){
@@ -208,6 +146,7 @@ void PlagiarismCatcher::findCollisions(int threshold){
 	}
 }
 
+// given a string, return the index of where it is in a vector
 int PlagiarismCatcher::getFileIndex(string s){
 	int i = 0;
 	while(files[i].compare(s) && i < files.size()){

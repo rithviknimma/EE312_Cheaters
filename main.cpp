@@ -20,7 +20,7 @@
 
 using namespace std;
 
-/*function... might want it in some class?*/
+// function to get txt file names
 int getdir (string dir, vector<string> &files, string ext)
 {
     DIR *dp;
@@ -39,16 +39,16 @@ int getdir (string dir, vector<string> &files, string ext)
     return 0;
 }
 
+// main engine, runs the hashing function
 int main(int argc, char* argv[])
 {
-    if(argc < 4){
+    if(argc < 4){ // needs at least 4 parameters
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
-        //string dir = string("sm_doc_set");
-        string dir = string(argv[1]);
-        PlagiarismCatcher p(stoi(string(argv[2])));
-        int minCollisions = stoi(argv[3]);
+        string dir = string(argv[1]); // directory
+        PlagiarismCatcher p(stoi(string(argv[2]))); // initialize plagiarism catcher with int n-word sequences
+        int minCollisions = stoi(argv[3]); // set threshold collisions
 
         vector<string> files = vector<string>();
 
@@ -57,20 +57,19 @@ int main(int argc, char* argv[])
         string fileName;
         int e; 
 
-        for (unsigned int i = 0; i < files.size();i++) {
+        // generate hash table for all txt files
+        for (unsigned int i = 0; i < files.size();i++) { 
             fileName = dir;
             fileName.append(files[i]);
 
-            e = p.generateHashtable(fileName);
+            e = p.generateHashtable(fileName); // generate table
 
             if(e != 0){
                 cout << fileName << " messed up" << endl;
             }
         }
 
-
-        p.findCollisions(minCollisions);
-
+        p.findCollisions(minCollisions); // output files that have more collisions than threshold
     }
     return 0;
 }
