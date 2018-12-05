@@ -45,10 +45,12 @@ int main(int argc, char* argv[])
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
-        //string dir = string("sm_doc_set");
+        double duration;
+        clock_t start;
+
         string dir = string(argv[1]);
-        PlagiarismCatcher p(stoi(string(argv[2])));
-        int minCollisions = stoi(argv[3]);
+        int nword = atoi(argv[2]);
+        int minCollisions = atoi(argv[3]);
 
         vector<string> files = vector<string>();
 
@@ -61,15 +63,23 @@ int main(int argc, char* argv[])
             fileName = dir;
             fileName.append(files[i]);
 
-            e = p.generateHashtable(fileName);
-
-            if(e != 0){
-                cout << fileName << " messed up" << endl;
-            }
+            files[i] = fileName;
         }
 
+        start = clock();
 
-        p.findCollisions(minCollisions);
+        PlagiarismCatcher p(nword, files);
+        p.generateHashtable();   
+        vector<string> result = p.findCollisions(minCollisions);
+
+        duration = (clock() - start)/(double) CLOCKS_PER_SEC;
+
+        cout << result.size() << " matches found!" << endl;
+        for(int i = 0; i < result.size(); i++){
+            cout << result[i] << endl;
+        }
+
+        cout << "File reading, hashing, and collision finding took " << duration << " seconds." << endl;
 
     }
     return 0;

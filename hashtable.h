@@ -1,17 +1,17 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
-#include <cmath>\
+#include <cmath>
 
 using namespace std;
 
-const int MAX_SIZE = 100007;
+const int MAX_SIZE = 860063; 
 
 class HashTable{
 
 public:
 	struct HashNode{
-		string file;
+		int file;
 		HashNode* next;
 	};
 
@@ -49,7 +49,7 @@ private:
 	// 		head->next = node;
 	// 	}
 	// }
-	void addToList(int key, string file){
+	void addToList(int key, int file){
 		//if the list is empty, just add at head
 		if(table[key] == NULL){
 			HashNode* node = new HashNode;
@@ -64,7 +64,7 @@ private:
 			//keep going until you find a node that points to nothing
 			while(head->next != NULL){
 				//if you find the same file already at a node, don't add anything new
-				if(file.compare(head->file) == 0){
+				if(file == head->file){
 					return;
 				}
 				head = head->next;
@@ -79,8 +79,6 @@ private:
 		}
 	}
 public:
-	const int FAILURE = -1;
-	const int SUCCESS = 0;
 
 	HashTable(){
 		size = MAX_SIZE;
@@ -134,73 +132,31 @@ public:
 		return size;
 	}
 
-	int addElement(int key, string file){
-		// key cannot be out of bounds of the hash table
-		if(key >= size || key < 0){
-			return FAILURE;
-		}
-
-		//addToList(table[key], file);
+	int addElement(int key, int file){
+		if(key < size && key > 0)
 		addToList(key, file);
-// 		if(table[key] != NULL){
-// cout << (table[key])->file << endl;
-// 		}
-		
-		return SUCCESS;
 	}
 
-	// int hash(vector<string>& s){
-	// 	int hashedValue = 1;
-	// 	int wordValue;
-	// 	string word;
-
-	// 	for(int i = 0; i < s.size(); i++){
-	// 		wordValue = 0;
-	// 		word = s[i];
-	// 		for(int j = 0; j < word.size(); j++){
-	// 			//change upper case to lower case
-	// 			if((word[j] < 91 && word[j] > 64)){
-	// 				word[j] = word[j] + 32;
-	// 			}
-	// 			//only if the letter is not lower case o
-	// 			else if(!(word[j] < 123 && word[j] > 96) && !(word[j] < 58 && word[j] > 47) && !(word[j] == 39)){
-	// 				word.erase(word.begin() + j);
-	// 			}
-	// 		}
-
-	// 		for(int j = 0; j < word.size(); j++){
-	// 			wordValue += 7^(word.size() - 1 - j) * word[j];
-	// 		}
-
-
-	// 		hashedValue += (2^word[0] * wordValue);
-	// 	}
-
-	// 	hashedValue = hashedValue % size;
-
-	// 	return hashedValue;
-	// }
-
 	int hash(string s){
-		int hashedValue = 37;
+		int hashedValue = 0;
 		int wordValue = 0;
-
+		int j = 0;
 		for(int i = 0; i < s.length(); i++){
 			if(s[i] == ' '){
+				hashedValue += wordValue;
+				j = 0;
 				wordValue = 0;
 			}
 
-			if((s[i] < 91 && s[i] > 64)){
-				s[i] = s[i] + 32;
+			if((s[i] <= 'Z' && s[i] >= 'A')){
+				wordValue += pow(7,j) * (s[i] + 32);
+				j++;
 			}
-			//only if the letter is not lower case o
-			// else if(!(word[j] < 123 && word[j] > 96) && !(word[j] < 58 && word[j] > 47) && !(word[j] == 39)){
-			// 	word.erase(word.begin() + j);
-			// }
-
-			wordValue += 7^i * s[i];
-
-			hashedValue += wordValue;
+			
+			else if((s[i] <= 'z' && s[i] > 'a') || (s[i] <= '9' && s[i] >= '0') || (s[i] == '\'')){
+				wordValue += pow(7,j) * s[i];
+				j++;
+			}
 		}
 
 		hashedValue = hashedValue % size;
@@ -208,29 +164,20 @@ public:
 		return hashedValue;
 	}
 
-	int getNumNodes(int index) const{
-		int numNodes = 0;
-
-		HashNode* ptr = table[index];
-		while(ptr != NULL){
-			numNodes++;
+	vector<int> getCollisionsAt(int index){
+		vector<int> vec;
+		if(table[index] == NULL){
+			return vec;
 		}
-
-		return numNodes;
-	}
-
-	vector<string> getCollisionsAt(int index){
-		vector<string> vec;
-
-		if(getNumNodes(index) < 2){
-			vec.push_back("");
+		else if((table[index])->next == NULL){
 			return vec;
 		}
 		else{
 			HashNode* i = table[index];
 			
-			while(i->next != NULL){
+			while(i != NULL){
 				vec.push_back(i->file);
+				i = i->next;
 			}
 		}
 		return vec;
