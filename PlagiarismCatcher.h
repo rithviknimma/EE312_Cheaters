@@ -23,7 +23,6 @@ private:
 	vector<string> files;
 
 	string vectorToString(const vector<string>& vec); 
-	int getFileIndex(string s);
 
 public:
 	PlagiarismCatcher(){
@@ -45,17 +44,15 @@ public:
 		table = *(new HashTable(tableSize));
 	}
 
-	void setFiles(vector<string>& s);
+	void setFiles(vector<string>& dir){
+		files = dir;
+	};
+
 	void generateHashtable();
 	vector<string> findCollisions(int thershold);
 
 	~PlagiarismCatcher();
 };
-
-void PlagiarismCatcher::setFiles(vector<string>& dir){
-	files = dir;
-}
-
 // function that converts vector<string> to String and returns it
 string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 	string s = "";
@@ -96,8 +93,6 @@ void PlagiarismCatcher::generateHashtable(){
 }
 
 vector<string> PlagiarismCatcher::findCollisions(int threshold){
-	vector<string> colls;
-
 	int collisions[files.size()][files.size()];
 
 	for(int i = 0; i < files.size(); i++){
@@ -120,6 +115,7 @@ vector<string> PlagiarismCatcher::findCollisions(int threshold){
 		}
 	}
 
+	vector<string> colls;
 	string s;
 	for(int i = 1; i < files.size(); i++){
 		for(int j = 0; j < i; j++){
@@ -131,9 +127,9 @@ vector<string> PlagiarismCatcher::findCollisions(int threshold){
 				s.append(toInt.str());
 
 				s.append(": ");
-				s.append(files[i]);
+				s.append(files[i].substr(files[i].find("/")+1, files[i].size()-1));
 				s.append(", ");
-				s.append(files[j]);
+				s.append(files[j].substr(files[j].find("/")+1, files[j].size()-1));
 
 				colls.push_back(s);
 			}

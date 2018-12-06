@@ -198,6 +198,7 @@ public:
 
 HashTable::~HashTable(){
 	clearMemory();
+	delete[] table;
 }
 
 void HashTable::clearMemory(){
@@ -220,4 +221,3 @@ void HashTable::clearMemory(){
 		}
 	}
 }
-
