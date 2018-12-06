@@ -68,8 +68,7 @@ string PlagiarismCatcher::vectorToString(const vector<string>& vec){
 
 void PlagiarismCatcher::generateHashtable(){
 	for(int i = 0; i < files.size(); i++){
-		ifstream myFile;
-		myFile.open(files[i], ifstream::in);
+		ifstream myFile(files[i].c_str());
 
 		if(myFile.is_open()){
 			vector<string> vec;
