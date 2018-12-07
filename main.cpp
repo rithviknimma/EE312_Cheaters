@@ -46,8 +46,6 @@ int main(int argc, char* argv[])
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
-        //double duration;
-        //clock_t start;
 
         //the the cmd line arguements
         string dir = string(argv[1]);
@@ -67,8 +65,6 @@ int main(int argc, char* argv[])
             files[i] = fileName;
         }
 
-        //start = clock();
-
         //create the PlagiarismCatcher object, specifiy n and files
         PlagiarismCatcher p(nword, files);
         //make the hashTable
@@ -76,16 +72,12 @@ int main(int argc, char* argv[])
         //get the collisions
         vector<string> result = p.findCollisions(minCollisions);
 
-        //duration = (clock() - start)/(double) CLOCKS_PER_SEC;
-
-        //cout << result.size() << " matches found!" << endl;
 
         //print the collsiions out
         for(int i = 0; i < result.size(); i++){
             cout << result[i] << endl;
         }
 
-        //cout << "File reading, hashing, and collision finding took " << duration << " seconds." << endl;
     }
     return 0;
 }
