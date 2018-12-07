@@ -46,41 +46,46 @@ int main(int argc, char* argv[])
         cerr << "Please enter correct cmd line parameters" << endl;
     }
     else{
-        double duration;
-        clock_t start;
+        //double duration;
+        //clock_t start;
 
+        //the the cmd line arguements
         string dir = string(argv[1]);
         int nword = atoi(argv[2]);
         int minCollisions = atoi(argv[3]);
 
         vector<string> files = vector<string>();
-
+        //get the files in the directory
         getdir(dir,files,".txt");
 
         string fileName;
-        int e; 
 
-        // generate hash table for all txt files
+        // add the directories to the files
         for (unsigned int i = 0; i < files.size();i++) { 
             fileName = dir;
             fileName.append(files[i]);
             files[i] = fileName;
         }
 
-        start = clock();
+        //start = clock();
 
+        //create the PlagiarismCatcher object, specifiy n and files
         PlagiarismCatcher p(nword, files);
+        //make the hashTable
         p.generateHashtable();   
+        //get the collisions
         vector<string> result = p.findCollisions(minCollisions);
 
-        duration = (clock() - start)/(double) CLOCKS_PER_SEC;
+        //duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
-        cout << result.size() << " matches found!" << endl;
+        //cout << result.size() << " matches found!" << endl;
+
+        //print the collsiions out
         for(int i = 0; i < result.size(); i++){
             cout << result[i] << endl;
         }
 
-        cout << "File reading, hashing, and collision finding took " << duration << " seconds." << endl;
+        //cout << "File reading, hashing, and collision finding took " << duration << " seconds." << endl;
     }
     return 0;
 }
