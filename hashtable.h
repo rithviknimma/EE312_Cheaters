@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <iostream>
 #include <cmath>
 
 using namespace std;
@@ -136,12 +137,12 @@ public:
 
 	int addElement(int key, int file){
 		if(key < size && key > 0)
-		addToList(key, file);
+			addToList(key, file);
 	}
 
 	int hash(string s){
-		int hashedValue = 0;
-		int wordValue = 0;
+		unsigned long int hashedValue = 0;
+		unsigned long int wordValue = 0;
 		int j = 0;
 		for(int i = 0; i < s.length(); i++){
 			if(s[i] == ' '){
@@ -155,15 +156,18 @@ public:
 				j++;
 			}
 			
-			else if((s[i] <= 'z' && s[i] > 'a') || (s[i] <= '9' && s[i] >= '0') || (s[i] == '\'')){
+			else if((s[i] <= 'z' && s[i] >= 'a') || (s[i] <= '9' && s[i] >= '0') || (s[i] == '\'')){
 				wordValue += pow(7,j) * s[i];
 				j++;
 			}
 		}
 
+		if(hashedValue < 0)
+			hashedValue *= -1;
+
 		hashedValue = hashedValue % size;
 
-		return hashedValue;
+		return (int) hashedValue;
 	}
 
 	vector<int> getCollisionsAt(int index){
