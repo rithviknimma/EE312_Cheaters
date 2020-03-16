@@ -1,2 +1,2 @@
 # EE312_Cheaters
-This program determines the similarities between documents in a large set to check if plagiarism is going on within the group.
+Detects plagiarism by hashing sentences from a set of documents and checking for collisions between them.
